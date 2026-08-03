@@ -31,8 +31,21 @@ class PathRemapperTest {
     }
 
     @Test
-    void remapsArmorFolderTexture() {
-        assertEquals("textures/models/armor/iron_layer_1.png", remapper.remapPath("textures/armor/iron_layer_1.png"));
+    void armorFoldersPassThroughUnchanged() {
+        // 26.2 has no models/armor; armor layers are handled by the
+        // ArmorExpansion alias table, so both 1.8 spellings stay put here.
+        assertEquals("textures/armor/iron_layer_1.png", remapper.remapPath("textures/armor/iron_layer_1.png"));
+        assertEquals("textures/models/armor/iron_layer_1.png", remapper.remapPath("textures/models/armor/iron_layer_1.png"));
+    }
+
+    @Test
+    void remapsMojangLogo() {
+        assertEquals("textures/gui/title/mojangstudios.png", remapper.remapPath("textures/gui/title/mojang.png"));
+    }
+
+    @Test
+    void remapsSunToCelestialFolder() {
+        assertEquals("textures/environment/celestial/sun.png", remapper.remapPath("textures/environment/sun.png"));
     }
 
     @Test
@@ -78,6 +91,18 @@ class PathRemapperTest {
     @Test
     void remapsMcmetaCompanionFile() {
         assertEquals("textures/block/oak_planks.png.mcmeta", remapper.remapPath("textures/blocks/planks_oak.png.mcmeta"));
+    }
+
+    @Test
+    void modernCelestialSunIsNotRemappedAgain() {
+        assertEquals("textures/environment/celestial/sun.png",
+                remapper.remapPath("textures/environment/celestial/sun.png"));
+    }
+
+    @Test
+    void modernMojangstudiosIsNotRemappedAgain() {
+        assertEquals("textures/gui/title/mojangstudios.png",
+                remapper.remapPath("textures/gui/title/mojangstudios.png"));
     }
 
     @Test

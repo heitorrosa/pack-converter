@@ -1,5 +1,6 @@
 package dev.heitorrosa.packconverter.pack;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.mojang.serialization.Codec;
+import dev.heitorrosa.packconverter.convert.PngTestUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -258,6 +260,208 @@ class ConverterPackResourcesTest {
     }
 
     @Test
+    void getResourceSlicesHotbarSpriteFromWidgetsAtlas() throws IOException {
+        byte[] widgets = PngTestUtil.png(256, 256);
+        fake.put("textures/gui/widgets.png", widgets);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/gui/sprites/hud/hotbar.png"));
+
+        assertNotNull(supplier);
+        byte[] hotbar = readBytes(supplier);
+        assertEquals(182, PngTestUtil.width(hotbar));
+        assertEquals(22, PngTestUtil.height(hotbar));
+        // Box starts at (0,0): slice pixel (7,5) == source pixel (7,5).
+        assertEquals(PngTestUtil.rgb(widgets, 7, 5), PngTestUtil.rgb(hotbar, 7, 5));
+    }
+
+    @Test
+    void getResourceReturnsNullWhenSliceSourceMissing() {
+        // No widgets.png in the pack: the request must fall through to null,
+        // so the game renders the vanilla default instead.
+        assertNull(converter.getResource(CLIENT, id("textures/gui/sprites/hud/hotbar.png")));
+    }
+
+    @Test
+    void getResourceServesArmorLayerFromLegacySource() throws IOException {
+        byte[] layer = PngTestUtil.png(64, 32);
+        fake.put("textures/models/armor/iron_layer_1.png", layer);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/entity/equipment/humanoid/iron.png"));
+
+        assertNotNull(supplier);
+        assertArrayEquals(layer, readBytes(supplier)); // straight pixel copy, no re-encode
+    }
+
+    @Test
+    void getResourceServesArmorLayerFromLegacyArmorFolderSpelling() throws IOException {
+        byte[] layer = PngTestUtil.png(64, 32);
+        fake.put("textures/armor/iron_layer_1.png", layer);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/entity/equipment/humanoid/iron.png"));
+
+        assertNotNull(supplier);
+        assertArrayEquals(layer, readBytes(supplier));
+    }
+
+    @Test
+    void getResourceServesMojangstudiosCopy() throws IOException {
+        byte[] logo = PngTestUtil.png(256, 128);
+        fake.put("textures/gui/title/mojang.png", logo);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/gui/title/mojangstudios.png"));
+
+        assertNotNull(supplier);
+        assertArrayEquals(logo, readBytes(supplier));
+    }
+
+    @Test
+    void getResourceServesMenuBackgroundCopies() throws IOException {
+        byte[] background = PngTestUtil.png(256, 256);
+        fake.put("textures/gui/options_background.png", background);
+
+        IoSupplier<InputStream> menu = converter.getResource(CLIENT,
+                id("textures/gui/menu_background.png"));
+        IoSupplier<InputStream> inworld = converter.getResource(CLIENT,
+                id("textures/gui/inworld_menu_background.png"));
+
+        assertNotNull(menu);
+        assertNotNull(inworld);
+        assertArrayEquals(background, readBytes(menu));
+        assertArrayEquals(background, readBytes(inworld));
+    }
+
+    @Test
+    void getResourceServesCelestialSunCopy() throws IOException {
+        byte[] sun = PngTestUtil.png(16, 16);
+        fake.put("textures/environment/sun.png", sun);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/environment/celestial/sun.png"));
+
+        assertNotNull(supplier);
+        assertArrayEquals(sun, readBytes(supplier));
+    }
+
+    @Test
+    void getResourceSplicesExplosionCells() throws IOException {
+        byte[] explosion = PngTestUtil.png(128, 128);
+        fake.put("textures/entity/explosion.png", explosion);
+
+        byte[] cell0 = readBytes(converter.getResource(CLIENT, id("textures/particle/explosion_0.png")));
+        byte[] cell5 = readBytes(converter.getResource(CLIENT, id("textures/particle/explosion_5.png")));
+
+        assertEquals(32, PngTestUtil.width(cell0));
+        assertEquals(32, PngTestUtil.height(cell0));
+        // explosion_0 = row0col0, explosion_5 = row1col1 in the 4x4 grid.
+        assertEquals(PngTestUtil.rgb(explosion, 0, 0), PngTestUtil.rgb(cell0, 0, 0));
+        assertEquals(PngTestUtil.rgb(explosion, 32, 32), PngTestUtil.rgb(cell5, 0, 0));
+    }
+
+    @Test
+    void listResourcesSurfacesSlicedHotbarWhenOnlyAtlasExists() throws IOException {
+        fake.put("textures/gui/widgets.png", PngTestUtil.png(256, 256));
+
+        List<Identifier> collected = collect("textures/gui/sprites/hud");
+
+        assertTrue(collected.contains(id("textures/gui/sprites/hud/hotbar.png")));
+        assertTrue(collected.contains(id("textures/gui/sprites/hud/hotbar_selection.png")));
+    }
+
+    @Test
+    void listResourcesSlicesHotbarContent() throws IOException {
+        byte[] widgets = PngTestUtil.png(256, 256);
+        fake.put("textures/gui/widgets.png", widgets);
+
+        Map<Identifier, byte[]> collected = new HashMap<>();
+        converter.listResources(CLIENT, "minecraft", "textures/gui/sprites/hud",
+                (listed, supplier) -> {
+                    try {
+                        collected.put(listed, readBytes(supplier));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        byte[] hotbar = collected.get(id("textures/gui/sprites/hud/hotbar.png"));
+        assertNotNull(hotbar);
+        assertEquals(182, PngTestUtil.width(hotbar));
+        assertEquals(PngTestUtil.rgb(widgets, 0, 0), PngTestUtil.rgb(hotbar, 0, 0));
+    }
+
+    @Test
+    void listResourcesOmitsSliceTargetsWhenSourceMissing() {
+        // Pack without widgets.png/icons.png: nothing under sprites/hud.
+        assertTrue(collect("textures/gui/sprites/hud").isEmpty());
+    }
+
+    @Test
+    void listResourcesSurfacesArmorTargetsWhenLayerExists() throws IOException {
+        fake.put("textures/models/armor/iron_layer_1.png", PngTestUtil.png(64, 32));
+
+        List<Identifier> collected = collect("textures/entity/equipment/humanoid");
+
+        assertTrue(collected.contains(id("textures/entity/equipment/humanoid/iron.png")));
+    }
+
+    @Test
+    void listResourcesSurfacesArmorTargetFromLegacyFolderSpelling() throws IOException {
+        fake.put("textures/armor/iron_layer_1.png", PngTestUtil.png(64, 32));
+
+        List<Identifier> collected = collect("textures/entity/equipment/humanoid");
+
+        assertTrue(collected.contains(id("textures/entity/equipment/humanoid/iron.png")));
+    }
+
+    @Test
+    void listResourcesSurfacesExpansionCopies() throws IOException {
+        fake.put("textures/gui/title/mojang.png", PngTestUtil.png(256, 128));
+        fake.put("textures/gui/options_background.png", PngTestUtil.png(256, 256));
+        fake.put("textures/environment/sun.png", PngTestUtil.png(16, 16));
+
+        assertTrue(collect("textures/gui/title").contains(id("textures/gui/title/mojangstudios.png")));
+        List<Identifier> gui = collect("textures/gui");
+        assertTrue(gui.contains(id("textures/gui/menu_background.png")));
+        assertTrue(gui.contains(id("textures/gui/inworld_menu_background.png")));
+        assertTrue(collect("textures/environment").contains(id("textures/environment/celestial/sun.png")));
+    }
+
+    @Test
+    void listResourcesSurfacesExplosionCells() throws IOException {
+        fake.put("textures/entity/explosion.png", PngTestUtil.png(128, 128));
+
+        List<Identifier> collected = collect("textures/particle");
+
+        assertTrue(collected.contains(id("textures/particle/explosion_0.png")));
+        assertTrue(collected.contains(id("textures/particle/explosion_5.png")));
+        assertTrue(collected.contains(id("textures/particle/explosion_15.png")));
+    }
+
+    @Test
+    void listResourcesSurfacesMoonPhasesWhenMoonAtlasExists() throws IOException {
+        fake.put("textures/environment/moon_phases.png", PngTestUtil.png(128, 64));
+
+        List<Identifier> collected = collect("textures/environment/celestial/moon");
+
+        assertTrue(collected.contains(id("textures/environment/celestial/moon/full_moon.png")));
+        assertTrue(collected.contains(id("textures/environment/celestial/moon/waxing_gibbous.png")));
+    }
+
+    @Test
+    void listResourcesRootSurfacesSlicesAndExpansions() throws IOException {
+        fake.put("textures/gui/widgets.png", PngTestUtil.png(256, 256));
+        fake.put("textures/models/armor/iron_layer_1.png", PngTestUtil.png(64, 32));
+
+        List<Identifier> collected = collect("textures");
+
+        assertTrue(collected.contains(id("textures/gui/sprites/hud/hotbar.png")));
+        assertTrue(collected.contains(id("textures/entity/equipment/humanoid/iron.png")));
+    }
+
+    @Test
     void closeDelegatesAndIsIdempotent() {
         converter.close();
         converter.close();
@@ -290,6 +494,12 @@ class ConverterPackResourcesTest {
     private static String read(IoSupplier<InputStream> supplier) throws IOException {
         try (InputStream in = supplier.get()) {
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private static byte[] readBytes(IoSupplier<InputStream> supplier) throws IOException {
+        try (InputStream in = supplier.get()) {
+            return in.readAllBytes();
         }
     }
 

@@ -1,8 +1,12 @@
 package dev.heitorrosa.packconverter.pack;
 
+import dev.heitorrosa.packconverter.convert.ArmorExpansion;
 import dev.heitorrosa.packconverter.convert.ModelRewriter;
 import dev.heitorrosa.packconverter.convert.PathRemapper;
 import dev.heitorrosa.packconverter.convert.RenameMap;
+import dev.heitorrosa.packconverter.convert.SliceEngine;
+import dev.heitorrosa.packconverter.convert.SliceSpecLoader;
+import dev.heitorrosa.packconverter.convert.Slicer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +41,18 @@ public final class ConverterPackResources implements PackResources {
     private static final PathRemapper REMAPPER = new PathRemapper(RENAME_MAP);
     private static final ModelRewriter REWRITER = new ModelRewriter();
     /**
+     * Slices the legacy GUI/particles atlases (and the custom explosion
+     * splice) into the modern per-sprite files the game requests.
+     */
+    private static final SliceEngine SLICE_ENGINE = new SliceEngine(
+            SliceSpecLoader.fromDefaultResources(), new Slicer());
+    /**
+     * One-to-many pixel copies for armor layers and the menu background /
+     * mojang logo / sun renames (26.2 serves these directly, not from an
+     * atlas).
+     */
+    private static final ArmorExpansion ARMOR = new ArmorExpansion();
+    /**
      * Modern base name -> legacy base names that rename to it (see
      * {@link RenameMap#reverseIndex()}); used to probe the delegate for a
      * resource when the direct modern-path lookup misses, because
@@ -53,6 +69,20 @@ public final class ConverterPackResources implements PackResources {
 
     @Override
     public IoSupplier<InputStream> getResource(PackType type, Identifier id) {
+        // Slice/expansion first: the GUI atlas sprites, particles, armor and
+        // copy renames do not exist as files in the delegate, so they must be
+        // synthesized before the rename remap runs for block/item textures.
+        byte[] sliced = SLICE_ENGINE.trySlice(id.getPath(), p -> readBytes(type, id, p));
+        if (sliced != null) {
+            return () -> new ByteArrayInputStream(sliced);
+        }
+        String expansionSource = ARMOR.sourceForTarget(id.getPath());
+        if (expansionSource != null) {
+            IoSupplier<InputStream> copied = expansionSource(type, id, expansionSource);
+            if (copied != null) {
+                return copied; // straight pixel copy, no rewrite
+            }
+        }
         String path = id.getPath();
         String remappedPath = REMAPPER.remapPath(path);
         Identifier remapped = remappedPath.equals(path) ? id : id.withPath(remappedPath);
@@ -80,6 +110,8 @@ public final class ConverterPackResources implements PackResources {
         for (String probe : legacyProbes(directory)) {
             listInto(type, namespace, probe, output, emitted);
         }
+        emitSliceTargets(type, namespace, directory, output, emitted);
+        emitExpansionTargets(type, namespace, directory, output, emitted);
     }
 
     @Override
@@ -149,6 +181,89 @@ public final class ConverterPackResources implements PackResources {
                 output.accept(out, served);
             }
         });
+    }
+
+    /**
+     * Surfaces slice targets under {@code directory}: the GUI atlas scan of
+     * {@code textures/gui/sprites/hud} finds the hotbar sprite even when the
+     * old pack only ships {@code textures/gui/widgets.png}. Sliced eagerly at
+     * listing time; empty slices are skipped (they would render the vanilla
+     * default anyway).
+     */
+    private void emitSliceTargets(PackType type, String namespace, String directory,
+            ResourceOutput output, Set<Identifier> emitted) {
+        for (String target : SLICE_ENGINE.sliceTargetsUnder(directory,
+                src -> delegate.getResource(type, id(namespace, src)) != null)) {
+            Identifier modern = id(namespace, target);
+            if (!emitted.add(modern)) {
+                continue;
+            }
+            byte[] sliced = SLICE_ENGINE.trySlice(target, p -> readBytes(type, modern, p));
+            if (sliced != null) {
+                output.accept(modern, () -> new ByteArrayInputStream(sliced));
+            }
+        }
+    }
+
+    /**
+     * Surfaces armor expansion and copy targets under {@code directory} whose
+     * source actually exists in the delegate (e.g. the material targets under
+     * {@code textures/entity/equipment/humanoid} when the old pack has the
+     * layer file). The source stream is drained once, inside a
+     * try-with-resources, so the delegate's IoSupplier is never closed twice.
+     */
+    private void emitExpansionTargets(PackType type, String namespace, String directory,
+            ResourceOutput output, Set<Identifier> emitted) {
+        for (String target : ARMOR.targetsUnder(directory)) {
+            Identifier modern = id(namespace, target);
+            if (!emitted.add(modern)) {
+                continue;
+            }
+            IoSupplier<InputStream> source = expansionSource(type, modern, ARMOR.sourceForTarget(target));
+            if (source == null) {
+                continue;
+            }
+            try (InputStream in = source.get()) {
+                byte[] bytes = in.readAllBytes();
+                output.accept(modern, () -> new ByteArrayInputStream(bytes));
+            } catch (IOException e) {
+                // Unreadable source: skip; the vanilla default will be used.
+            }
+        }
+    }
+
+    /**
+     * Serves an expansion source from the delegate, probing the legacy
+     * {@code textures/armor/} spelling when the canonical
+     * {@code textures/models/armor/} one is absent.
+     */
+    private IoSupplier<InputStream> expansionSource(PackType type, Identifier id, String sourcePath) {
+        IoSupplier<InputStream> source = delegate.getResource(type, id.withPath(sourcePath));
+        if (source == null && sourcePath.startsWith("textures/models/armor/")) {
+            source = delegate.getResource(type, id.withPath(
+                    "textures/armor/" + sourcePath.substring("textures/models/armor/".length())));
+        }
+        return source;
+    }
+
+    /**
+     * Drains a delegate resource into memory, closing its stream exactly once.
+     * Returns {@code null} when the resource is absent or unreadable.
+     */
+    private byte[] readBytes(PackType type, Identifier id, String path) {
+        IoSupplier<InputStream> supplier = delegate.getResource(type, id.withPath(path));
+        if (supplier == null) {
+            return null;
+        }
+        try (InputStream in = supplier.get()) {
+            return in.readAllBytes();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static Identifier id(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
     /**

@@ -1,5 +1,7 @@
 package dev.heitorrosa.packconverter.convert;
 
+import java.util.Map;
+
 /**
  * Remaps a resource path (Identifier path form, e.g. {@code
  * textures/blocks/planks_oak.png}) from the 1.8 layout to the modern layout:
@@ -7,6 +9,17 @@ package dev.heitorrosa.packconverter.convert;
  * extension and any namespace prefix preserved.
  */
 public final class PathRemapper {
+
+    /**
+     * Extra base-name renames scoped to a legacy folder, applied after the
+     * JSON rename chain: the mojang logo and the sun texture moved to a
+     * subfolder in modern versions. Folder-scoped so a modern path that
+     * already lives in the target location (e.g.
+     * {@code textures/environment/celestial/sun.png}) is never remapped again.
+     */
+    private static final Map<String, Map<String, String>> FOLDER_SCOPED_RENAMES = Map.of(
+            "textures/gui/title/", Map.of("mojang", "mojangstudios"),
+            "textures/environment/", Map.of("sun", "celestial/sun"));
 
     private final RenameMap map;
 
@@ -41,6 +54,13 @@ public final class PathRemapper {
         String suffix = dot >= 0 ? file.substring(dot) : "";
 
         String renamed = map == null ? base : map.rename(base);
+        Map<String, String> folderRenames = FOLDER_SCOPED_RENAMES.get(folder);
+        if (folderRenames != null) {
+            String extra = folderRenames.get(renamed);
+            if (extra != null) {
+                renamed = extra;
+            }
+        }
         if (!isRenameFolder(folder) && renamed.equals(base)) {
             // Non-rename folder with no match: pass through completely untouched.
             return namespace + rest;
@@ -64,7 +84,6 @@ public final class PathRemapper {
         switch (folder) {
             case "textures/blocks/":
             case "textures/items/":
-            case "textures/armor/":
             case "blocks/":
             case "items/":
             case "block/":
@@ -81,8 +100,6 @@ public final class PathRemapper {
                 return "textures/block/";
             case "textures/items/":
                 return "textures/item/";
-            case "textures/armor/":
-                return "textures/models/armor/";
             case "blocks/":
                 return "block/";
             case "items/":
