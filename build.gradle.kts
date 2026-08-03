@@ -17,6 +17,8 @@ dependencies {
     minecraft("com.mojang:minecraft:26.2")
     implementation("net.fabricmc:fabric-loader:0.19.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    // Gradle 9 no longer auto-injects the JUnit Platform launcher; required to run tests.
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
