@@ -49,7 +49,8 @@ public final class SliceSpecLoader {
         for (SliceSpec spec : specs) {
             index.computeIfAbsent(spec.sourcePath(), k -> new ArrayList<>()).addAll(spec.targets());
             for (SliceTarget target : spec.targets()) {
-                reverse.put(target.targetPath(), new SliceEntry(spec.sourcePath(), target));
+                reverse.put(target.targetPath(), new SliceEntry(spec.sourcePath(), target,
+                        spec.declaredWidth(), spec.declaredHeight()));
             }
         }
         Map<String, List<SliceTarget>> frozen = new HashMap<>();
@@ -92,6 +93,10 @@ public final class SliceSpecLoader {
             for (JsonElement specEl : specs) {
                 JsonObject spec = specEl.getAsJsonObject();
                 String source = baseDir + spec.get("path").getAsString();
+                // The declared vanilla source size: per-spec "width"/"height"
+                // (0 when absent -> the engine treats it as unscaled).
+                int declaredWidth = spec.has("width") ? spec.get("width").getAsInt() : 0;
+                int declaredHeight = spec.has("height") ? spec.get("height").getAsInt() : 0;
                 List<SliceTarget> targets = new ArrayList<>();
                 JsonArray textures = spec.getAsJsonArray("textures");
                 if (textures != null) {
@@ -106,7 +111,7 @@ public final class SliceSpecLoader {
                                 box.get("height").getAsInt()));
                     }
                 }
-                out.add(new SliceSpec(source, List.copyOf(targets)));
+                out.add(new SliceSpec(source, declaredWidth, declaredHeight, List.copyOf(targets)));
             }
             return out;
         } catch (RuntimeException e) {

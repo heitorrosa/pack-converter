@@ -21,7 +21,7 @@ class SliceEngineTest {
     private final SliceEngine engine = new SliceEngine(loaderWithHotbar(), new Slicer());
 
     private static SliceSpecLoader loaderWithHotbar() {
-        return new SliceSpecLoader(List.of(new SliceSpec("textures/gui/widgets.png",
+        return new SliceSpecLoader(List.of(new SliceSpec("textures/gui/widgets.png", 256, 256,
                 List.of(new SliceTarget("textures/gui/sprites/hud/hotbar.png", 0, 0, 182, 22)))));
     }
 

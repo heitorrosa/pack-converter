@@ -15,7 +15,9 @@ import java.util.function.Predicate;
  *
  * <p>The 1.8 explosion atlas (4x4 grid of 32x32 cells, row-major) is a custom
  * splice not present in particles.json; its 16 targets are added to the index
- * at construction. Immutable after construction (thread-safe).
+ * at construction. Spec boxes are scaled from the declared vanilla source
+ * size to the pack's actual atlas size before slicing. Immutable after
+ * construction (thread-safe).
  */
 public final class SliceEngine {
 
@@ -28,8 +30,9 @@ public final class SliceEngine {
         Map<String, SliceEntry> reverse = new HashMap<>(loader.reverseIndex());
         for (int i = 0; i < 16; i++) {
             String target = "textures/particle/explosion_" + i + ".png";
+            // The 1.8 explosion atlas is a 128x128 4x4 grid of 32x32 cells.
             reverse.put(target, new SliceEntry(EXPLOSION_SOURCE,
-                    new SliceTarget(target, (i % 4) * 32, (i / 4) * 32, 32, 32)));
+                    new SliceTarget(target, (i % 4) * 32, (i / 4) * 32, 32, 32), 128, 128));
         }
         this.reverse = Collections.unmodifiableMap(reverse);
         this.slicer = slicer;
@@ -53,7 +56,21 @@ public final class SliceEngine {
             return null;
         }
         SliceTarget target = entry.target();
-        byte[] sliced = slicer.slice(source, target.x(), target.y(), target.width(), target.height());
+        int[] dims = slicer.dimensions(source);
+        if (dims == null) {
+            return null;
+        }
+        // Spec boxes are calibrated against the declared vanilla source size;
+        // scale them by the ACTUAL source size so 2x HD (or downscaled) packs
+        // slice at the scaled cells. A missing/zero declared size means 1.0.
+        double scale = Math.min(
+                entry.declaredWidth() > 0 ? (double) dims[0] / entry.declaredWidth() : 1.0,
+                entry.declaredHeight() > 0 ? (double) dims[1] / entry.declaredHeight() : 1.0);
+        int x = (int) Math.round(target.x() * scale);
+        int y = (int) Math.round(target.y() * scale);
+        int w = Math.max(1, (int) Math.round(target.width() * scale));
+        int h = Math.max(1, (int) Math.round(target.height() * scale));
+        byte[] sliced = slicer.slice(source, x, y, w, h);
         if (sliced == null || slicer.isEmpty(sliced)) {
             return null;
         }

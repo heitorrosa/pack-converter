@@ -1,5 +1,6 @@
 package dev.heitorrosa.packconverter.convert;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -75,5 +76,16 @@ class SlicerTest {
     @Test
     void corruptBytesAreTreatedAsEmpty() {
         assertTrue(slicer.isEmpty(new byte[] {1, 2, 3, 4}));
+    }
+
+    @Test
+    void dimensionsReturnsImageSize() {
+        assertArrayEquals(new int[] {128, 64}, slicer.dimensions(PngTestUtil.png(128, 64)));
+    }
+
+    @Test
+    void dimensionsReturnsNullForCorruptOrMissingInput() {
+        assertNull(slicer.dimensions(new byte[] {1, 2, 3, 4}));
+        assertNull(slicer.dimensions(null));
     }
 }

@@ -47,16 +47,26 @@ class SliceSpecLoaderTest {
 
     @Test
     void inventorySourceMergesGuiAndMobEffectTargets() {
-        // gui.json container/inventory.png (6 targets) + mob_effect.json (27).
+        // gui.json container/inventory.png (4 targets) + mob_effect.json (22).
         List<SliceTarget> targets = loader.index().get("textures/gui/container/inventory.png");
         assertNotNull(targets);
-        assertEquals(33, targets.size());
+        assertEquals(26, targets.size());
     }
 
     @Test
     void mapIconsAndMoonPhasesIndexed() {
-        assertNotNull(find(loader.index().get("textures/map/map_icons.png"),
-                "textures/map/decorations/player.png"));
+        List<SliceTarget> mapIcons = loader.index().get("textures/map/map_icons.png");
+        assertNotNull(mapIcons);
+        // 1.8.9 ships 8 real map decorations; the banner/woodland/etc cells
+        // are solid-blue placeholders and must be dropped from the spec.
+        assertEquals(8, mapIcons.size());
+        SliceTarget player = find(mapIcons, "textures/map/decorations/player.png");
+        assertEquals(0, player.x());
+        assertEquals(0, player.y());
+        SliceTarget offLimits = find(mapIcons, "textures/map/decorations/player_off_limits.png");
+        assertEquals(24, offLimits.x());
+        assertEquals(8, offLimits.y());
+        assertNull(find(mapIcons, "textures/map/decorations/white_banner.png"));
         SliceTarget fullMoon = find(loader.index().get("textures/environment/moon_phases.png"),
                 "textures/environment/celestial/moon/full_moon.png");
         assertEquals(0, fullMoon.x());
@@ -86,6 +96,34 @@ class SliceSpecLoaderTest {
     }
 
     @Test
+    void reverseIndexResolvesMobEffectHealthBoostCell() {
+        SliceEntry boost = loader.reverseIndex().get("textures/mob_effect/health_boost.png");
+        assertNotNull(boost);
+        assertEquals(36, boost.target().x());
+        assertEquals(234, boost.target().y());
+        assertEquals(18, boost.target().width());
+        assertEquals(18, boost.target().height());
+    }
+
+    @Test
+    void nonExistentMobEffectsNotIndexed() {
+        // absorption/glowing/levitation/luck/unluck do not exist in 1.8.9 and
+        // slice non-icon decoration; they must fall through to vanilla.
+        for (String effect : List.of("absorption", "glowing", "levitation", "luck", "unluck")) {
+            assertNull(loader.reverseIndex().get("textures/mob_effect/" + effect + ".png"));
+        }
+    }
+
+    @Test
+    void deadGuiEffectBackgroundSpritesNotIndexed() {
+        // 26.2 renamed these sprites; the old targets have no counterpart.
+        assertNull(loader.reverseIndex().get(
+                "textures/gui/sprites/container/inventory/effect_background_large.png"));
+        assertNull(loader.reverseIndex().get(
+                "textures/gui/sprites/container/inventory/effect_background_small.png"));
+    }
+
+    @Test
     void reverseIndexResolvesMoonPhase() {
         SliceEntry waning = loader.reverseIndex().get("textures/environment/celestial/moon/waning_gibbous.png");
         assertNotNull(waning);
@@ -112,7 +150,7 @@ class SliceSpecLoaderTest {
 
     @Test
     void explicitSpecsConstructLoader() {
-        SliceSpec spec = new SliceSpec("textures/gui/widgets.png",
+        SliceSpec spec = new SliceSpec("textures/gui/widgets.png", 256, 256,
                 List.of(new SliceTarget("textures/gui/sprites/hud/hotbar.png", 0, 0, 182, 22)));
         SliceSpecLoader explicit = new SliceSpecLoader(List.of(spec));
 

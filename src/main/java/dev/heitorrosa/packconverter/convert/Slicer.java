@@ -53,6 +53,26 @@ public final class Slicer {
     }
 
     /**
+     * @return the source image's dimensions as {@code {width, height}}, or
+     *         {@code null} when the input is not a decodable image
+     */
+    public int[] dimensions(byte[] pngBytes) {
+        if (pngBytes == null) {
+            return null;
+        }
+        try {
+            BufferedImage source = ImageIO.read(new ByteArrayInputStream(pngBytes));
+            if (source == null) {
+                return null;
+            }
+            return new int[] {source.getWidth(), source.getHeight()};
+        } catch (IOException | RuntimeException e) {
+            // Trust boundary: a malformed pack image must not take the game down.
+            return null;
+        }
+    }
+
+    /**
      * @return true iff the image is fully transparent (every alpha == 0), has
      *         no pixels, or is not decodable
      */

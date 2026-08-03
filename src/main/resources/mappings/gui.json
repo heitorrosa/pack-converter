@@ -3513,16 +3513,6 @@
                 }
             },
             {
-                "path": "sprites/container/inventory/effect_background_large.png",
-                "remove": true,
-                "box": {
-                    "x": 0,
-                    "y": 166,
-                    "width": 120,
-                    "height": 32
-                }
-            },
-            {
                 "path": "sprites/hud/effect_background.png",
                 "remove": true,
                 "predicate": {
@@ -3552,22 +3542,6 @@
                     "y": 166,
                     "width": 24,
                     "height": 24
-                }
-            },
-            {
-                "path": "sprites/container/inventory/effect_background_small.png",
-                "remove": true,
-                "predicate": {
-                    "protocol": {
-                        "min_inclusive": 107,
-                        "max_inclusive": null
-                    }
-                },
-                "box": {
-                    "x": 0,
-                    "y": 198,
-                    "width": 32,
-                    "height": 32
                 }
             }
         ]
