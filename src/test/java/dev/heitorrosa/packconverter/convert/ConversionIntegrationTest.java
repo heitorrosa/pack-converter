@@ -54,7 +54,6 @@ class ConversionIntegrationTest {
     @Test
     void detectorFlagsRealLegacyPack() {
         OldPackDetector detector = new OldPackDetector();
-        assertTrue(detector.needsConversion("{\"pack\":{\"pack_format\":2,\"description\":\"1.8 pack\"}}",
-                Arrays.asList("assets/minecraft/textures/blocks/planks_oak.png")));
+        assertTrue(detector.needsConversion("{\"pack\":{\"pack_format\":2,\"description\":\"1.8 pack\"}}"));
     }
 }

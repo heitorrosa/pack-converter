@@ -63,9 +63,32 @@ class ModelRewriterTest {
     }
 
     @Test
-    void blockStateJsonIsPassedThroughUnchanged() {
-        String blockState = "{\"variants\":{\"normal\":{\"model\":\"block/oak_planks\"}}}";
-        assertEquals(blockState, rewriter.rewriteBlockStateJson(blockState, remapper));
+    void remapsVariantBlockStateModelKeys() {
+        String blockState = "{\"variants\":{\"normal\":{\"model\":\"block/planks_oak\"}}}";
+        String out = rewriter.rewriteBlockStateJson(blockState, remapper);
+        JsonObject root = JsonParser.parseString(out).getAsJsonObject();
+        assertEquals("block/oak_planks",
+                root.getAsJsonObject("variants").getAsJsonObject("normal").get("model").getAsString());
+    }
+
+    @Test
+    void remapsMultipartBlockStateModelKeys() {
+        String blockState = "{\"multipart\":[{\"when\":{\"north\":\"true\"},\"apply\":{\"model\":\"block/planks_oak\"}}]}";
+        String out = rewriter.rewriteBlockStateJson(blockState, remapper);
+        JsonObject apply = JsonParser.parseString(out).getAsJsonObject()
+                .getAsJsonArray("multipart").get(0).getAsJsonObject().getAsJsonObject("apply");
+        assertEquals("block/oak_planks", apply.get("model").getAsString());
+    }
+
+    @Test
+    void blockStateNonModelKeysPreserved() {
+        String blockState = "{\"variants\":{\"facing=north\":{\"model\":\"block/planks_oak\",\"y\":90,\"uvlock\":true}}}";
+        String out = rewriter.rewriteBlockStateJson(blockState, remapper);
+        JsonObject variant = JsonParser.parseString(out).getAsJsonObject()
+                .getAsJsonObject("variants").getAsJsonObject("facing=north");
+        assertEquals("block/oak_planks", variant.get("model").getAsString());
+        assertEquals(90, variant.get("y").getAsInt());
+        assertEquals(true, variant.get("uvlock").getAsBoolean());
     }
 
     @Test

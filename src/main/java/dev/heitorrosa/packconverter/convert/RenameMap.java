@@ -56,6 +56,26 @@ public final class RenameMap {
         return current;
     }
 
+    /**
+     * Reverse index: final (modern) base name -> every legacy base name that
+     * renames to it, deduplicated. Computed once from the chained steps; used
+     * to probe a legacy pack for a resource when a direct modern-path lookup
+     * misses (PathRemapper is one-way, legacy -> modern).
+     */
+    public Map<String, List<String>> reverseIndex() {
+        Map<String, List<String>> reverse = new HashMap<>();
+        for (Map<String, String> step : steps) {
+            for (String legacy : step.keySet()) {
+                String finalName = rename(legacy);
+                List<String> names = reverse.computeIfAbsent(finalName, k -> new ArrayList<>());
+                if (!names.contains(legacy)) {
+                    names.add(legacy);
+                }
+            }
+        }
+        return reverse;
+    }
+
     private static String readResource(String resource) {
         try (InputStream in = RenameMap.class.getResourceAsStream(resource)) {
             if (in == null) {

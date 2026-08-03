@@ -4,32 +4,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import java.util.Collection;
 
 /**
  * Decides whether a resource pack needs conversion: the pack.mcmeta is
- * missing/blank, its {@code pack} object lacks BOTH {@code min_format} and
- * {@code max_format}, or any root path is in a legacy 1.8 texture folder.
+ * missing/blank, or its {@code pack} object lacks BOTH {@code min_format} and
+ * {@code max_format}.
  */
 public final class OldPackDetector {
 
-    private final PathRemapper pathRemapper;
-
-    public OldPackDetector() {
-        // ponytail: legacy detection never touches the rename table; map unused.
-        this.pathRemapper = new PathRemapper(null);
-    }
-
-    public boolean needsConversion(String mcmetaJson, Collection<String> rootPaths) {
+    public boolean needsConversion(String mcmetaJson) {
         if (mcmetaJson == null || mcmetaJson.isBlank()) {
             return true;
-        }
-        if (rootPaths != null) {
-            for (String path : rootPaths) {
-                if (pathRemapper.isLegacyPath(path)) {
-                    return true;
-                }
-            }
         }
         return lacksModernFormat(mcmetaJson);
     }
