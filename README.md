@@ -8,14 +8,14 @@ converted in memory: path remapping (`textures/blocks/planks_oak.png` ->
 `textures/block/oak_planks.png`, ~650 renames), synthesized `pack.mcmeta`,
 and model/blockstate texture rewriting — no files touched on disk.
 
-## Build
+Compile with:
 
 ```
-gradlew.bat build
-gradlew.bat test
+.\gradlew.bat build
+.\gradlew.bat test
 ```
 
-Output: `build/libs/packconverter-0.1.0.jar`.
+Credits: agentdid127/ResourcePackConverter (MIT)
 
 ## Roadmap (TDD)
 
@@ -25,5 +25,6 @@ Output: `build/libs/packconverter-0.1.0.jar`.
    force-load compatibility mixin.
 3. Config screen (Mod Menu) + optional sprite-sheet slicing for <=1.7 packs.
 
-GPL-3.0. Rename mapping data (blocks/items) from
-agentdid127/ResourcePackConverter (MIT) with attribution.
+#
+
+Licensed under GPL-3.0.

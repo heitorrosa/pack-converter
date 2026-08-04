@@ -2,7 +2,7 @@ plugins {
     id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
 }
 
-version = "0.1.0"
+version = "1.0.0"
 group = "dev.heitorrosa"
 
 base {

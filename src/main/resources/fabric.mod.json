@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "packconverter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "name": "Pack Converter",
   "description": "Converts old (1.7/1.8) resource packs to work on 26.2 on the fly.",
   "authors": [
