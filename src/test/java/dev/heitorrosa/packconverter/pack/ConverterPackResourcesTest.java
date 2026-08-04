@@ -451,6 +451,48 @@ class ConverterPackResourcesTest {
     }
 
     @Test
+    void getResourceSlicesCompassFrameFromLegacyAtlas() throws IOException {
+        byte[] compass = PngTestUtil.png(16, 512);
+        fake.put("textures/items/compass.png", compass);
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/item/compass_07.png"));
+
+        assertNotNull(supplier);
+        byte[] frame = readBytes(supplier);
+        assertEquals(16, PngTestUtil.width(frame));
+        assertEquals(16, PngTestUtil.height(frame));
+        // Frame 7 = row band 7 (y = 7*16) of the 16x512 atlas.
+        assertEquals(PngTestUtil.rgb(compass, 0, 7 * 16), PngTestUtil.rgb(frame, 0, 0));
+    }
+
+    @Test
+    void getResourceStillRemapsOrdinaryItemTextures() throws IOException {
+        // compass_*/clock_* slicing must not shadow the item rename path:
+        // golden_apple still resolves from the legacy apple_golden file.
+        fake.put("textures/items/apple_golden.png", PngTestUtil.png(16, 16));
+
+        IoSupplier<InputStream> supplier = converter.getResource(CLIENT,
+                id("textures/item/golden_apple.png"));
+
+        assertNotNull(supplier);
+        byte[] apple = readBytes(supplier);
+        assertEquals(16, PngTestUtil.width(apple));
+        assertEquals(16, PngTestUtil.height(apple));
+        assertEquals(PngTestUtil.rgb(PngTestUtil.png(16, 16), 0, 0), PngTestUtil.rgb(apple, 0, 0));
+    }
+
+    @Test
+    void listResourcesSurfacesCompassFramesWhenAtlasExists() throws IOException {
+        fake.put("textures/items/compass.png", PngTestUtil.png(16, 512));
+
+        List<Identifier> collected = collect("textures/item");
+
+        assertTrue(collected.contains(id("textures/item/compass_00.png")));
+        assertTrue(collected.contains(id("textures/item/compass_31.png")));
+    }
+
+    @Test
     void listResourcesRootSurfacesSlicesAndExpansions() throws IOException {
         fake.put("textures/gui/widgets.png", PngTestUtil.png(256, 256));
         fake.put("textures/models/armor/iron_layer_1.png", PngTestUtil.png(64, 32));

@@ -1,0 +1,880 @@
+[
+    {
+        "path": "items/compass.png",
+        "width": 16,
+        "height": 512,
+        "textures": [
+            {
+                "path": "item/compass_00.png",
+                "box": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_01.png",
+                "box": {
+                    "x": 0,
+                    "y": 16,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_02.png",
+                "box": {
+                    "x": 0,
+                    "y": 32,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_03.png",
+                "box": {
+                    "x": 0,
+                    "y": 48,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_04.png",
+                "box": {
+                    "x": 0,
+                    "y": 64,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_05.png",
+                "box": {
+                    "x": 0,
+                    "y": 80,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_06.png",
+                "box": {
+                    "x": 0,
+                    "y": 96,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_07.png",
+                "box": {
+                    "x": 0,
+                    "y": 112,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_08.png",
+                "box": {
+                    "x": 0,
+                    "y": 128,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_09.png",
+                "box": {
+                    "x": 0,
+                    "y": 144,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_10.png",
+                "box": {
+                    "x": 0,
+                    "y": 160,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_11.png",
+                "box": {
+                    "x": 0,
+                    "y": 176,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_12.png",
+                "box": {
+                    "x": 0,
+                    "y": 192,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_13.png",
+                "box": {
+                    "x": 0,
+                    "y": 208,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_14.png",
+                "box": {
+                    "x": 0,
+                    "y": 224,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_15.png",
+                "box": {
+                    "x": 0,
+                    "y": 240,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_16.png",
+                "box": {
+                    "x": 0,
+                    "y": 256,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_17.png",
+                "box": {
+                    "x": 0,
+                    "y": 272,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_18.png",
+                "box": {
+                    "x": 0,
+                    "y": 288,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_19.png",
+                "box": {
+                    "x": 0,
+                    "y": 304,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_20.png",
+                "box": {
+                    "x": 0,
+                    "y": 320,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_21.png",
+                "box": {
+                    "x": 0,
+                    "y": 336,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_22.png",
+                "box": {
+                    "x": 0,
+                    "y": 352,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_23.png",
+                "box": {
+                    "x": 0,
+                    "y": 368,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_24.png",
+                "box": {
+                    "x": 0,
+                    "y": 384,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_25.png",
+                "box": {
+                    "x": 0,
+                    "y": 400,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_26.png",
+                "box": {
+                    "x": 0,
+                    "y": 416,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_27.png",
+                "box": {
+                    "x": 0,
+                    "y": 432,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_28.png",
+                "box": {
+                    "x": 0,
+                    "y": 448,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_29.png",
+                "box": {
+                    "x": 0,
+                    "y": 464,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_30.png",
+                "box": {
+                    "x": 0,
+                    "y": 480,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/compass_31.png",
+                "box": {
+                    "x": 0,
+                    "y": 496,
+                    "width": 16,
+                    "height": 16
+                }
+            }
+        ]
+    },
+    {
+        "path": "items/clock.png",
+        "width": 16,
+        "height": 1024,
+        "textures": [
+            {
+                "path": "item/clock_00.png",
+                "box": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_01.png",
+                "box": {
+                    "x": 0,
+                    "y": 16,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_02.png",
+                "box": {
+                    "x": 0,
+                    "y": 32,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_03.png",
+                "box": {
+                    "x": 0,
+                    "y": 48,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_04.png",
+                "box": {
+                    "x": 0,
+                    "y": 64,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_05.png",
+                "box": {
+                    "x": 0,
+                    "y": 80,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_06.png",
+                "box": {
+                    "x": 0,
+                    "y": 96,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_07.png",
+                "box": {
+                    "x": 0,
+                    "y": 112,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_08.png",
+                "box": {
+                    "x": 0,
+                    "y": 128,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_09.png",
+                "box": {
+                    "x": 0,
+                    "y": 144,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_10.png",
+                "box": {
+                    "x": 0,
+                    "y": 160,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_11.png",
+                "box": {
+                    "x": 0,
+                    "y": 176,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_12.png",
+                "box": {
+                    "x": 0,
+                    "y": 192,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_13.png",
+                "box": {
+                    "x": 0,
+                    "y": 208,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_14.png",
+                "box": {
+                    "x": 0,
+                    "y": 224,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_15.png",
+                "box": {
+                    "x": 0,
+                    "y": 240,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_16.png",
+                "box": {
+                    "x": 0,
+                    "y": 256,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_17.png",
+                "box": {
+                    "x": 0,
+                    "y": 272,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_18.png",
+                "box": {
+                    "x": 0,
+                    "y": 288,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_19.png",
+                "box": {
+                    "x": 0,
+                    "y": 304,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_20.png",
+                "box": {
+                    "x": 0,
+                    "y": 320,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_21.png",
+                "box": {
+                    "x": 0,
+                    "y": 336,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_22.png",
+                "box": {
+                    "x": 0,
+                    "y": 352,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_23.png",
+                "box": {
+                    "x": 0,
+                    "y": 368,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_24.png",
+                "box": {
+                    "x": 0,
+                    "y": 384,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_25.png",
+                "box": {
+                    "x": 0,
+                    "y": 400,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_26.png",
+                "box": {
+                    "x": 0,
+                    "y": 416,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_27.png",
+                "box": {
+                    "x": 0,
+                    "y": 432,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_28.png",
+                "box": {
+                    "x": 0,
+                    "y": 448,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_29.png",
+                "box": {
+                    "x": 0,
+                    "y": 464,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_30.png",
+                "box": {
+                    "x": 0,
+                    "y": 480,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_31.png",
+                "box": {
+                    "x": 0,
+                    "y": 496,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_32.png",
+                "box": {
+                    "x": 0,
+                    "y": 512,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_33.png",
+                "box": {
+                    "x": 0,
+                    "y": 528,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_34.png",
+                "box": {
+                    "x": 0,
+                    "y": 544,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_35.png",
+                "box": {
+                    "x": 0,
+                    "y": 560,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_36.png",
+                "box": {
+                    "x": 0,
+                    "y": 576,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_37.png",
+                "box": {
+                    "x": 0,
+                    "y": 592,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_38.png",
+                "box": {
+                    "x": 0,
+                    "y": 608,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_39.png",
+                "box": {
+                    "x": 0,
+                    "y": 624,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_40.png",
+                "box": {
+                    "x": 0,
+                    "y": 640,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_41.png",
+                "box": {
+                    "x": 0,
+                    "y": 656,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_42.png",
+                "box": {
+                    "x": 0,
+                    "y": 672,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_43.png",
+                "box": {
+                    "x": 0,
+                    "y": 688,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_44.png",
+                "box": {
+                    "x": 0,
+                    "y": 704,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_45.png",
+                "box": {
+                    "x": 0,
+                    "y": 720,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_46.png",
+                "box": {
+                    "x": 0,
+                    "y": 736,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_47.png",
+                "box": {
+                    "x": 0,
+                    "y": 752,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_48.png",
+                "box": {
+                    "x": 0,
+                    "y": 768,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_49.png",
+                "box": {
+                    "x": 0,
+                    "y": 784,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_50.png",
+                "box": {
+                    "x": 0,
+                    "y": 800,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_51.png",
+                "box": {
+                    "x": 0,
+                    "y": 816,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_52.png",
+                "box": {
+                    "x": 0,
+                    "y": 832,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_53.png",
+                "box": {
+                    "x": 0,
+                    "y": 848,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_54.png",
+                "box": {
+                    "x": 0,
+                    "y": 864,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_55.png",
+                "box": {
+                    "x": 0,
+                    "y": 880,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_56.png",
+                "box": {
+                    "x": 0,
+                    "y": 896,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_57.png",
+                "box": {
+                    "x": 0,
+                    "y": 912,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_58.png",
+                "box": {
+                    "x": 0,
+                    "y": 928,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_59.png",
+                "box": {
+                    "x": 0,
+                    "y": 944,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_60.png",
+                "box": {
+                    "x": 0,
+                    "y": 960,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_61.png",
+                "box": {
+                    "x": 0,
+                    "y": 976,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_62.png",
+                "box": {
+                    "x": 0,
+                    "y": 992,
+                    "width": 16,
+                    "height": 16
+                }
+            },
+            {
+                "path": "item/clock_63.png",
+                "box": {
+                    "x": 0,
+                    "y": 1008,
+                    "width": 16,
+                    "height": 16
+                }
+            }
+        ]
+    }
+]

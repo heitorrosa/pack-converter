@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Parses the GUI/particles/mob-effect/map-icon/moon-phase slicing specs from
- * the classpath {@code /mappings/*.json} files. Each file is either a flat
- * array of spec objects (gui.json) or a single spec object (the others);
- * every path inside a file is relative to that file's base directory
- * ({@code textures/gui/}, {@code textures/particle/}, {@code textures/}, ...).
+ * Parses the GUI/particles/mob-effect/map-icon/moon-phase/compass-clock
+ * slicing specs from the classpath {@code /mappings/*.json} files. Each file
+ * is either a flat array of spec objects (gui.json) or a single spec object
+ * (the others); every path inside a file is relative to that file's base
+ * directory ({@code textures/gui/}, {@code textures/particle/}, {@code
+ * textures/}, ...).
  *
  * <p>Predicates, metadata and delete/remove flags are ignored: every entry is
  * indexed unconditionally and out-of-bounds or empty slices are dropped at
@@ -28,14 +29,19 @@ import java.util.Map;
 public final class SliceSpecLoader {
 
     private static final String[] RESOURCES = {
-        "gui.json", "particles.json", "mob_effect.json", "map_icons.json", "moon_phases.json"
+        "gui.json", "particles.json", "mob_effect.json", "map_icons.json", "moon_phases.json",
+        "compass_clock.json"
     };
     private static final Map<String, String> BASE_DIRS = Map.of(
             "gui.json", "textures/gui/",
             "particles.json", "textures/particle/",
             "mob_effect.json", "textures/",
             "map_icons.json", "textures/map/",
-            "moon_phases.json", "textures/environment/");
+            "moon_phases.json", "textures/environment/",
+            // Sources live in the legacy textures/items/ folder while the
+            // targets live in the modern textures/item/ folder, so the shared
+            // base is textures/ and each entry carries its own subfolder.
+            "compass_clock.json", "textures/");
 
     private final Map<String, List<SliceTarget>> index;
     private final Map<String, SliceEntry> reverse;
@@ -60,7 +66,7 @@ public final class SliceSpecLoader {
     }
 
     /**
-     * Loads the five default mapping resources from the classpath.
+     * Loads the default mapping resources from the classpath.
      *
      * @throws IllegalStateException if a resource is missing or unparseable
      */

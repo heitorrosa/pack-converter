@@ -41,7 +41,7 @@ public final class ConverterPackResources implements PackResources {
     private static final PathRemapper REMAPPER = new PathRemapper(RENAME_MAP);
     private static final ModelRewriter REWRITER = new ModelRewriter();
     /**
-     * Slices the legacy GUI/particles atlases (and the custom explosion
+     * Slices the legacy GUI/particles/item atlases (and the custom explosion
      * splice) into the modern per-sprite files the game requests.
      */
     private static final SliceEngine SLICE_ENGINE = new SliceEngine(

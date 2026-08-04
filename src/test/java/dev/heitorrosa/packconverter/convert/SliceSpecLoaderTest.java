@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link SliceSpecLoader} against the REAL mapping resources:
- * gui.json is a flat array (40 specs), the other four are single-spec objects.
+ * gui.json is a flat array (40 specs), the others are single-spec objects or small arrays.
  */
 class SliceSpecLoaderTest {
 
@@ -21,8 +21,9 @@ class SliceSpecLoaderTest {
     void guiJsonParsesAllFortySpecs() {
         // 40 gui.json specs + particles + mob_effect + map_icons + moon_phases;
         // mob_effect's source (gui/container/inventory.png) merges into the
-        // existing gui.json source, so it adds no new key.
-        assertEquals(43, loader.index().size());
+        // existing gui.json source, so it adds no new key. compass_clock.json
+        // adds the compass and clock item atlases.
+        assertEquals(45, loader.index().size());
     }
 
     @Test
