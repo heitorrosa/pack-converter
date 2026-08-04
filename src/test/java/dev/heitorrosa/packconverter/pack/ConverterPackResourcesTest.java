@@ -319,7 +319,7 @@ class ConverterPackResourcesTest {
     }
 
     @Test
-    void getResourceServesMenuBackgroundCopies() throws IOException {
+    void getResourceServesMenuBackgroundCopyButNotInworld() throws IOException {
         byte[] background = PngTestUtil.png(256, 256);
         fake.put("textures/gui/options_background.png", background);
 
@@ -329,9 +329,10 @@ class ConverterPackResourcesTest {
                 id("textures/gui/inworld_menu_background.png"));
 
         assertNotNull(menu);
-        assertNotNull(inworld);
         assertArrayEquals(background, readBytes(menu));
-        assertArrayEquals(background, readBytes(inworld));
+        // The ESC/pause overlay must stay vanilla (semi-transparent) — the 1.8
+        // options_background is opaque and would hide the world.
+        assertNull(inworld);
     }
 
     @Test
@@ -425,7 +426,7 @@ class ConverterPackResourcesTest {
         assertTrue(collect("textures/gui/title").contains(id("textures/gui/title/mojangstudios.png")));
         List<Identifier> gui = collect("textures/gui");
         assertTrue(gui.contains(id("textures/gui/menu_background.png")));
-        assertTrue(gui.contains(id("textures/gui/inworld_menu_background.png")));
+        assertFalse(gui.contains(id("textures/gui/inworld_menu_background.png")));
         assertTrue(collect("textures/environment").contains(id("textures/environment/celestial/sun.png")));
     }
 

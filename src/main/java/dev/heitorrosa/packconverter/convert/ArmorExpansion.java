@@ -48,8 +48,12 @@ public final class ArmorExpansion {
         putArmor(forward, reverse, "horse/armor/horse_armor_gold.png", "horse_body/gold.png");
         putArmor(forward, reverse, "horse/armor/horse_armor_diamond.png", "horse_body/diamond.png");
         // Title/menu copy targets (full pack-relative sources).
+        // NOTE: only menu_background is mapped. inworld_menu_background is
+        // deliberately NOT: the ESC/pause overlay is semi-transparent (alpha 64)
+        // in vanilla so the world shows through, while the 1.8 options_background
+        // is opaque (alpha 255) and would turn the pause menu into a solid wall.
         putFull(forward, reverse, "textures/gui/options_background.png",
-                "textures/gui/menu_background.png", "textures/gui/inworld_menu_background.png");
+                "textures/gui/menu_background.png");
         putFull(forward, reverse, "textures/gui/title/mojang.png", "textures/gui/title/mojangstudios.png");
         putFull(forward, reverse, "textures/environment/sun.png", "textures/environment/celestial/sun.png");
 

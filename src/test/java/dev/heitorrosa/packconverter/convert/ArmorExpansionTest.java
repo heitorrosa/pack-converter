@@ -75,14 +75,14 @@ class ArmorExpansionTest {
 
     @Test
     void menuBackgroundCopiesUseExpansion() {
+        // Only menu_background is mapped; inworld_menu_background (the ESC/pause
+        // overlay) is left to the vanilla semi-transparent texture.
         assertArrayEquals(new String[] {
-                "textures/gui/menu_background.png",
-                "textures/gui/inworld_menu_background.png"},
+                "textures/gui/menu_background.png"},
                 expansion.targetsFor("textures/gui/options_background.png"));
         assertEquals("textures/gui/options_background.png",
                 expansion.sourceForTarget("textures/gui/menu_background.png"));
-        assertEquals("textures/gui/options_background.png",
-                expansion.sourceForTarget("textures/gui/inworld_menu_background.png"));
+        assertNull(expansion.sourceForTarget("textures/gui/inworld_menu_background.png"));
     }
 
     @Test
