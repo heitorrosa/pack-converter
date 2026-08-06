@@ -17,14 +17,6 @@ Compile with:
 
 Credits: agentdid127/ResourcePackConverter (MIT)
 
-## Roadmap (TDD)
-
-1. Core (pure, unit-tested): rename mapping data, `PathRemapper`,
-   `PackMetaFixer`, `ModelRewriter`, `OldPackDetector`.
-2. Pipeline glue: `ConverterPackResources` wrapper + pack discovery hook +
-   force-load compatibility mixin.
-3. Config screen (Mod Menu) + optional sprite-sheet slicing for <=1.7 packs.
-
 #
 
 Licensed under GPL-3.0.
