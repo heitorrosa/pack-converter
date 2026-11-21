@@ -3,7 +3,7 @@
   "id": "packconverter",
   "version": "1.0.0",
   "name": "Pack Converter",
-  "description": "Converts old (1.7/1.8) resource packs to work on 26.2 on the fly.",
+  "description": "Converts old (1.7/1.8) resource packs to work on 26.3 on the fly.",
   "authors": [
     "heitorrosa"
   ],
@@ -19,6 +19,6 @@
   ],
   "depends": {
     "fabricloader": ">=0.19.0",
-    "minecraft": "26.2"
+    "minecraft": "26.3"
   }
 }

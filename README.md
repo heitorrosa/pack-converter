@@ -1,6 +1,6 @@
 # Pack Converter
 
-On-the-fly resource pack converter for Minecraft **26.2** (Fabric, client-side).
+On-the-fly resource pack converter for Minecraft **26.3** (Fabric, client-side).
 
 Old resource packs (1.7/1.8 era) use the pre-1.13 texture layout and pack
 formats. This mod intercepts the resource pipeline and serves old packs

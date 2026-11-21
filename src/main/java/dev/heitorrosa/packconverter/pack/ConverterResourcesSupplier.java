@@ -1,6 +1,8 @@
 package dev.heitorrosa.packconverter.pack;
 
+import java.util.stream.Stream;
 import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackMetadataResources;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.repository.Pack;
 
@@ -18,12 +20,12 @@ public final class ConverterResourcesSupplier implements Pack.ResourcesSupplier 
     }
 
     @Override
-    public PackResources openPrimary(PackLocationInfo location) {
-        return new ConverterPackResources(delegate.openPrimary(location));
+    public PackMetadataResources openMetadata(PackLocationInfo location) {
+        return delegate.openMetadata(location);
     }
 
     @Override
-    public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
-        return new ConverterPackResources(delegate.openFull(location, metadata));
+    public Stream<PackResources> openResources(PackLocationInfo location, Pack.Metadata metadata) {
+        return delegate.openResources(location, metadata).map(ConverterPackResources::new);
     }
 }

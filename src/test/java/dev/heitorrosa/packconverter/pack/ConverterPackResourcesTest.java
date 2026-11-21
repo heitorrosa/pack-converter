@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackMetadataResources;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
@@ -227,20 +229,14 @@ class ConverterPackResourcesTest {
         FakeResourcesSupplier delegate = new FakeResourcesSupplier();
         ConverterResourcesSupplier supplier = new ConverterResourcesSupplier(delegate);
 
-        PackResources primary = supplier.openPrimary(FakePackResources.FAKE_LOCATION);
-        PackResources full = supplier.openFull(FakePackResources.FAKE_LOCATION,
+        PackResources full = supplier.openResources(FakePackResources.FAKE_LOCATION,
                 new Pack.Metadata(Component.literal("x"), PackCompatibility.COMPATIBLE,
-                        FeatureFlagSet.of(), List.of()));
+                        FeatureFlagSet.of(), List.of())).findFirst().orElseThrow();
 
-        assertTrue(primary instanceof ConverterPackResources);
         assertTrue(full instanceof ConverterPackResources);
-
-        primary.close();
-        primary.close();
+        full.close();
+        full.close();
         assertEquals(1, delegate.resources.closeCount);
-        full.close();
-        full.close();
-        assertEquals(2, delegate.resources.closeCount);
     }
 
     @Test
@@ -624,13 +620,13 @@ class ConverterPackResourcesTest {
         private final FakePackResources resources = new FakePackResources();
 
         @Override
-        public PackResources openPrimary(PackLocationInfo location) {
+        public PackMetadataResources openMetadata(PackLocationInfo location) {
             return resources;
         }
 
         @Override
-        public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
-            return resources;
+        public Stream<PackResources> openResources(PackLocationInfo location, Pack.Metadata metadata) {
+            return Stream.of(resources);
         }
     }
 }

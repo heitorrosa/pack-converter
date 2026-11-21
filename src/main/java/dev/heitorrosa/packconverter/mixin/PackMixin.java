@@ -9,7 +9,7 @@ import java.util.List;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackMetadataResources;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackFormat;
@@ -72,11 +72,11 @@ public abstract class PackMixin {
 
     @Unique
     private static String readRawPackMeta(Pack.ResourcesSupplier resources, PackLocationInfo location) {
-        try (PackResources primary = resources.openPrimary(location)) {
-            if (primary == null) {
+        try (PackMetadataResources metadata = resources.openMetadata(location)) {
+            if (metadata == null) {
                 return null;
             }
-            IoSupplier<InputStream> supplier = primary.getRootResource("pack.mcmeta");
+            IoSupplier<InputStream> supplier = metadata.getRootResource("pack.mcmeta");
             if (supplier == null) {
                 return null;
             }
